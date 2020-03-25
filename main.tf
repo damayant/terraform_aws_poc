@@ -135,3 +135,38 @@ resource "aws_security_group" "allow_ssh_icmp_private" {
     Name = "allow_ssh_icmp_private"
   }
 }
+
+
+resource "aws_key_pair" "default" {
+  key_name = var.public_key_name
+  public_key = file("~/Documents/AWS-EKS-Udemy-master/shrobon/eks-course.pem")
+}
+
+resource "aws_instance" "public_instance" {
+  ami           = var.ami
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.default.id
+  subnet_id = aws_subnet.public_subnet_1a.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh_public.id]
+  associate_public_ip_address = true
+  source_dest_check = false
+
+  tags = {
+    Name = "Public-Instance"
+    Describe = "Instance in public subnet"
+  }
+}
+
+resource "aws_instance" "private_instance" {
+  ami           = var.ami
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.default.id
+  subnet_id = aws_subnet.private_subnet_1b.id
+  vpc_security_group_ids = [aws_security_group.allow_ssh_icmp_private.id]
+  associate_public_ip_address = false
+  source_dest_check = false
+  tags = {
+    Name = "Private-Instance"
+    Description = "Instance in private subnet"
+  }
+}
