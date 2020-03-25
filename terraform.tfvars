@@ -1,0 +1,5 @@
+vpc_cidr_block = "10.0.0.0/26"
+public_subnet_cidr_block = "10.0.0.0/27"
+private_subnet_cidr_block = "10.0.0.32/27"
+public_subnet_az = "1a"
+private_subnet_az = "1b"
