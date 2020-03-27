@@ -9,14 +9,14 @@ resource "aws_vpc" "test_vpc" {
 resource "aws_subnet" "public_subnet_1a" {
     vpc_id = aws_vpc.test_vpc.id
     cidr_block = var.public_subnet_cidr_block
-    availability_zone = "${var.region}-${var.public_subnet_az}"
+    availability_zone = "${var.region}${var.public_subnet_az}"
     map_public_ip_on_launch = true
 }
 
 resource "aws_subnet" "private_subnet_1b" {
     vpc_id = aws_vpc.test_vpc.id
     cidr_block = var.private_subnet_cidr_block
-    availability_zone = "${var.region}-${var.private_subnet_az}"
+    availability_zone = "${var.region}${var.private_subnet_az}"
     map_public_ip_on_launch = false
 }
 
@@ -104,7 +104,7 @@ resource "aws_security_group" "allow_ssh_public" {
 
 ## Security Group for instances in the private subnet
 resource "aws_security_group" "allow_ssh_icmp_private" {
-  name        = "allow_ssh"
+  name        = "allow_ssh_private"
   description = "Allow SSH and ICMP traffic from public subnet"
   vpc_id      = aws_vpc.test_vpc.id
 
@@ -137,9 +137,10 @@ resource "aws_security_group" "allow_ssh_icmp_private" {
 }
 
 
+# ssh-keygen -t rsa -b 4096 -C "shrobon@ualberta.ca" -f $HOME/.ssh/ec2
 resource "aws_key_pair" "default" {
   key_name = var.public_key_name
-  public_key = file("~/Documents/AWS-EKS-Udemy-master/shrobon/eks-course.pem")
+  public_key = file("~/.ssh/ec2.pub")
 }
 
 resource "aws_instance" "public_instance" {
