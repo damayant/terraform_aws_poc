@@ -1,3 +1,17 @@
+## Steps
+
+```
+# build docker image and create infra 
+docker build -t terraform-runner \
+--build-arg AWS_ACCESS_KEY_ID=<Your AWS Access Key> \
+--build-arg AWS_SECRET_ACCESS_KEY=<Your AWS Secret Key> \
+--build-arg AWS_DEFAULT_REGION=us-east-1 
+.
+
+# destroy infra 
+docker run -it terraform-runner:latest  /bin/bash
+terraform destroy --auto-approve
+```
 
 ## Terraform Resources
 1. https://learn.hashicorp.com/terraform/getting-started/
@@ -21,15 +35,3 @@
 
 ## TODO
 - Setup Terraform Remote State
-
-## Plan
-- Docker container
-  - takes input: AWS credentials
-  - installs software
-    - aws cli
-    - terraform
-  - runs
-    - terraform init
-    - terraform apply
-    - returns some kind of load banacer ip
-    - maps volumes for state ? 

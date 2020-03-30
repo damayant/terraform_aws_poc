@@ -2,14 +2,14 @@
 
 
 resource "aws_key_pair" "keypair" {
-  key_name   = var.public_key_name
+  key_name   = "${var.public_key_name }${var.public_subnet_id}"
   public_key = file("~/.ssh/terraform.pub")
 }
 
 resource "aws_instance" "public_instance" {
   ami                         = var.ami
   instance_type               = "t2.micro"
-  key_name                    = var.public_key_name
+  key_name                    = "${var.public_key_name }${var.public_subnet_id}"
   subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [var.public_sg]
   associate_public_ip_address = true
@@ -24,7 +24,7 @@ resource "aws_instance" "public_instance" {
 resource "aws_instance" "private_instance" {
   ami                         = var.ami
   instance_type               = "t2.micro"
-  key_name                    = var.public_key_name
+  key_name                    = "${var.public_key_name }${var.public_subnet_id}"
   subnet_id                   = var.private_subnet_id
   vpc_security_group_ids      = [var.private_sg]
   associate_public_ip_address = false
